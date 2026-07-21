@@ -50,36 +50,12 @@
 
     .btn-submit { width: 100%; padding: 14px; font-size: 15px; font-weight: 600; color: white; background-color: var(--secondary); border: none; border-radius: 8px; cursor: pointer; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.2s; font-family: 'Montserrat', sans-serif;}
     .btn-submit.btn-dark { background-color: var(--primary); }
-    .btn-submit.btn-danger { background-color: var(--danger); margin-top: 20px; }
     .btn-submit:hover { transform: translateY(-1px); }
-    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none;}
-
-    .btn-cari { padding: 12px 20px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: 0.2s; white-space: nowrap;}
-    .btn-cari:hover { background-color: var(--primary-hover); }
-
-    .status-panel { background: #F8FAFC; border: 1.5px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 25px; display: none; }
-    .status-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--border-color); font-size: 13px; }
-    .status-item:last-child { border-bottom: none; }
-    .doc-ada { color: #047857; font-weight: 600; background: #D1FAE5; padding: 4px 10px; border-radius: 4px; font-size: 11px; text-decoration: none; display:inline-block; margin:3px; }
-    .doc-tiada { color: #B91C1C; font-weight: 600; background: #FEE2E2; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
-    .doc-neutral { color: #475569; font-weight: 600; background: #F1F5F9; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
-
-    .table-responsive { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: white; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 850px; }
-    th, td { text-align: left; padding: 15px 12px; border-bottom: 1px solid var(--border-light); vertical-align: top;}
-    th { background-color: #F0F7F4; font-weight: 700; color: var(--primary); font-family: 'Montserrat', sans-serif; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #D6E8E0;}
-    tbody tr:hover { background-color: #F8FAFC; }
-    
-    .badge { padding: 5px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; display: inline-block; text-align: center; margin: 2px; }
-    .badge-ada { background-color: #D1FAE5; color: #3F6212; border: 1px solid #BEF264; }
-    .badge-tiada { background-color: #FEE2E2; color: #991B1B; border: 1px solid #fecaca; }
-    .badge-neutral { background-color: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
-    .badge-pu { background-color: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; font-weight: 700; }
 
     .alert { padding: 15px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; margin-top: 20px; display: none; }
-    .alert-info { background-color: #F0F9FF; color: #0369A1; border: 1px solid #E0F2FE;}
     .alert-success { background-color: #ECFCCB; color: #4D7C0F; border: 1px solid #D9F99D;}
-    .alert-danger { background-color: #FEF2F2; color: #B91C1C; border: 1px solid #fecaca;}
+    .alert-info { background-color: #F0F9FF; color: #0369A1; border: 1px solid #E0F2FE;}
+    
     .loader { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: none; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
   </style>
@@ -89,21 +65,23 @@
   <div class="page-wrapper">
     <div class="header">
       <h2>Sistem Pengurusan Jemaah</h2>
-      <p>Paparan ringkas pendaftaran, dokumen & tugasan operasi</p>
+      <p>Paparan pangkalan data & pendaftaran rasmi</p>
     </div>
 
     <div class="container">
       
+      <!-- TAB NAVIGATION -->
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('daftar', this)">Daftar Jemaah Baru</button>
-        <button class="tab-btn" onclick="switchTab('kemaskini', this)">Kemaskini & Semak</button>
+        <button class="tab-btn" onclick="switchTab('kemaskini', this)">Semak & Carian</button>
         <button class="tab-btn" onclick="switchTab('senarai', this); muatDataJemaah();">Senarai Status</button>
       </div>
 
-      <!-- TAB 1: DAFTAR BAHARU -->
+      <!-- TAB 1: DAFTAR BARU -->
       <div id="tab-daftar" class="tab-content active">
         <div class="form-wrapper">
-          <form id="formDaftar" onsubmit="event.preventDefault(); submitDaftar();">
+          <!-- Gunakan Form Target ke iframe tersembunyi untuk elak sekatan CORS -->
+          <form id="formDaftar" action="" method="POST" target="hidden_iframe" onsubmit="mulaiHantar()">
             
             <div class="form-group">
               <label>Nama PU</label>
@@ -118,90 +96,52 @@
             <div class="form-group"><label>No. Kad Pengenalan</label><input type="text" name="nokp" class="form-control" placeholder="Cth: 880101115566" required></div>
             <div class="form-group"><label>No. Telefon</label><input type="text" name="telefon" class="form-control" placeholder="Cth: 0123456789" required></div>
             
-            <div class="form-group"><label>Borang Pendaftaran</label><input type="file" name="borang" class="form-control" required></div>
-            
-            <div style="background: #F0F7F4; padding: 12px 15px; border-radius: 8px; border-left: 4px solid var(--secondary); margin: 30px 0 15px;">
+            <div style="background: #F0F7F4; padding: 12px 15px; border-radius: 8px; border-left: 4px solid var(--secondary); margin: 25px 0 15px;">
               <p style="font-size: 12px; color: var(--primary); font-weight: 700; margin:0; text-transform:uppercase;">Checklist Operasi</p>
             </div>
             
             <div class="checklist-container">
-              <div class="checkbox-item"><input type="checkbox" id="cb_beg" name="beg"><label for="cb_beg">Serahan Beg</label></div>
-              <div class="checkbox-item"><input type="checkbox" id="cb_kursus" name="kursus"><label for="cb_kursus">Kursus Umrah</label></div>
-              <div class="checkbox-item"><input type="checkbox" id="cb_jadual" name="jadual"><label for="cb_jadual">Jadual Perjalanan</label></div>
-              <div class="checkbox-item"><input type="checkbox" id="cb_keyin" name="keyin"><label for="cb_keyin">Key-In Passport</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="cb_beg" name="beg" value="Selesai"><label for="cb_beg">Serahan Beg</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="cb_kursus" name="kursus" value="Selesai"><label for="cb_kursus">Kursus Umrah</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="cb_jadual" name="jadual" value="Selesai"><label for="cb_jadual">Jadual Perjalanan</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="cb_keyin" name="keyin" value="Selesai"><label for="cb_keyin">Key-In Passport</label></div>
             </div>
 
-            <div style="background: #F0F7F4; padding: 12px 15px; border-radius: 8px; border-left: 4px solid var(--secondary); margin: 30px 0 15px;">
-              <p style="font-size: 12px; color: var(--primary); font-weight: 700; margin:0; text-transform:uppercase;">Muat Naik Dokumen Tambahan (Pilihan)</p>
-            </div>
+            <button type="submit" id="btnDaftar" class="btn-submit">
+              <div class="loader" id="loaderDaftar"></div> 
+              <span id="txtDaftar">Hantar Pendaftaran</span>
+            </button>
             
-            <div class="form-group"><label>Gambar Pasport</label><input type="file" name="gambarPasport" class="form-control"></div>
-            <div class="form-group"><label>Salinan Pasport</label><input type="file" name="salinanPasport" class="form-control"></div>
-            <div class="form-group"><label>Biometrik (Saudi Visa Bio)</label><input type="file" name="bio" class="form-control"></div>
-            <div class="form-group"><label>Tiket HHR (Pilihan)</label><input type="file" name="tiketHHR" class="form-control"></div>
-            <div class="form-group"><label>Resit Bayaran (Deposit)</label><input type="file" name="buktiPembayaran" class="form-control"></div>
-            
-            <button type="submit" id="btnDaftar" class="btn-submit"><div class="loader" id="loaderDaftar"></div> <span id="txtDaftar">Hantar Pendaftaran</span></button>
-            <div id="statusDaftar" class="alert"></div>
+            <div id="statusDaftar" class="alert alert-success">Pendaftaran jemaah berjaya dihantar ke sistem!</div>
           </form>
+
+          <!-- Iframe tersembunyi untuk terima tindak balas tanpa ganggu paparan -->
+          <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="selesaiHantar()"></iframe>
         </div>
       </div>
 
-      <!-- TAB 2: KEMASKINI & PADAM -->
+      <!-- TAB 2: SEMAK -->
       <div id="tab-kemaskini" class="tab-content">
         <div class="form-wrapper">
-          <div class="form-group" style="background: #F8FAFC; padding: 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 25px;">
-            <label style="font-size: 14px; color: var(--primary);">Masukkan No. K/P Jemaah</label>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-              <input type="text" id="input_nokp_cari" class="form-control" placeholder="Cth: 880101115566">
-              <button type="button" class="btn-cari" onclick="cariStatusJemaah()">Semak Rekod</button>
-            </div>
-            <div id="infoJemaah" style="font-size: 13px; color: var(--secondary); font-weight: 600; margin-top: 10px;"></div>
-          </div>
-
-          <div id="panelStatusDokumen" class="status-panel">
-            <h4 style="font-size: 13px; color: var(--primary); font-family: 'Montserrat', sans-serif; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Status Dokumen Semasa:</h4>
-            <div class="status-item"><span>1. Borang Pendaftaran:</span> <span id="st_borang"></span></div>
-            <div class="status-item"><span>2. Gambar Pasport:</span> <span id="st_gambar"></span></div>
-            <div class="status-item"><span>3. Salinan Pasport:</span> <span id="st_salinan"></span></div>
-            <div class="status-item"><span>4. Biometrik:</span> <span id="st_bio"></span></div>
-            <div class="status-item"><span>5. Tiket HHR:</span> <span id="st_hhr"></span></div>
-            <div class="status-item" style="align-items: flex-start;"><span>6. Senarai Resit Bayaran:</span> <div id="st_resit" style="text-align: right;"></div></div>
-          </div>
-
-          <form id="formKemaskini" onsubmit="event.preventDefault(); submitKemaskini();" style="display:none;">
-            <input type="hidden" id="hidden_nokp" name="nokp_kemaskini">
-            <p style="font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; margin-top:30px;">Kemaskini Checklist Operasi:</p>
-            <div class="checklist-container">
-              <div class="checkbox-item"><input type="checkbox" id="cb_beg_k" name="beg_k"><label for="cb_beg_k">Serahan Beg</label></div>
-              <div class="checkbox-item"><input type="checkbox" id="cb_kursus_k" name="kursus_k"><label for="cb_kursus_k">Kursus Umrah</label></div>
-              <div class="checkbox-item"><input type="checkbox" id="cb_jadual_k" name="jadual_k"><label for="cb_jadual_k">Jadual Perjalanan</label></div>
-              <div class="checkbox-item"><input type="checkbox" id="cb_keyin_k" name="keyin_k"><label for="cb_keyin_k">Key-In Passport</label></div>
-            </div>
-            <button type="submit" id="btnKemaskini" class="btn-submit btn-dark"><div class="loader" id="loaderKemaskini"></div> <span id="txtKemaskini">Simpan Rekod & Dokumen</span></button>
-            <div id="statusKemaskini" class="alert"></div>
-          </form>
+          <p style="text-align: center; color: var(--text-muted); padding: 30px;">Gunakan pautan Google Apps Script rasmi untuk pengurusan carian mendalam, atau gunakan tab Senarai Status di sebelah.</p>
         </div>
       </div>
 
-      <!-- TAB 3: SENARAI JEMAAH & STATUS -->
+      <!-- TAB 3: SENARAI -->
       <div id="tab-senarai" class="tab-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-          <h3 style="font-size: 16px; color: var(--primary); font-weight: 700;">Pangkalan Data Lengkap</h3>
+          <h3 style="font-size: 16px; color: var(--primary); font-weight: 700;">Pangkalan Data Jemaah</h3>
           <button onclick="muatDataJemaah()" style="background:var(--bg-card); border:1.5px solid var(--border-color); padding: 8px 16px; border-radius: 6px; font-size:12px; font-weight:700; cursor:pointer;">🔄 Segar Semula</button>
         </div>
-        <div class="table-responsive">
-          <table>
+        <div class="table-responsive" style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px;" id="tabelData">
             <thead>
-              <tr>
-                <th>Nama PU & Jemaah</th>
-                <th>Semakan Dokumen</th>
-                <th>Resit Bayaran</th>
-                <th>Checklist Operasi</th>
+              <tr style="background:#F0F7F4; color:var(--primary); text-align:left;">
+                <th style="padding:12px;">Maklumat Jemaah</th>
               </tr>
             </thead>
             <tbody id="badanJadual">
-              <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-muted);">Sila klik butang <b>'Segar Semula'</b> untuk paparan.</td></tr>
+              <tr><td style="padding: 30px; text-align:center; color: var(--text-muted);">Sila klik butang 'Segar Semula' di atas.</td></tr>
             </tbody>
           </table>
         </div>
@@ -211,8 +151,11 @@
   </div>
 
   <script>
-    // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI:
+    // 1. MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI:
     const API_URL = https://script.google.com/macros/s/AKfycby9afV3y8OmGUte2ImXPLc9yfpfWqiKDdAwMmzwihwoVG3edOWYBVMIiYCvaCKK_xCF/exec;
+
+    // Tetapkan action form secara automatik kepada API URL
+    document.getElementById('formDaftar').action = API_URL;
 
     function switchTab(tabName, btnElement) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -221,94 +164,48 @@
       if (btnElement) btnElement.classList.add('active');
     }
 
-    function toggleUI(type, isLoading) {
-      document.getElementById('btn' + type).disabled = isLoading;
-      document.getElementById('loader' + type).style.display = isLoading ? 'inline-block' : 'none';
-      if(isLoading) { 
-        document.getElementById('status' + type).className = 'alert alert-info'; 
-        document.getElementById('status' + type).style.display = 'block';
-        document.getElementById('status' + type).innerText = "Sedang berhubung dengan pelayan... Sila tunggu."; 
+    function mulaiHantar() {
+      document.getElementById('btnDaftar').disabled = true;
+      document.getElementById('loaderDaftar').style.display = 'inline-block';
+      document.getElementById('txtDaftar').innerText = "Menghantar...";
+    }
+
+    function selesaiHantar() {
+      // Semak jika form baru dihantar (elak cetusan awal ketika muat halaman)
+      if(document.getElementById('btnDaftar').disabled) {
+        document.getElementById('btnDaftar').disabled = false;
+        document.getElementById('loaderDaftar').style.display = 'none';
+        document.getElementById('txtDaftar').innerText = "Hantar Pendaftaran";
+        document.getElementById('statusDaftar').style.display = 'block';
+        document.getElementById('formDaftar').reset();
       }
-    }
-    
-    function showStatus(type, status, message) {
-      document.getElementById('status' + type).className = status === 'success' ? 'alert alert-success' : 'alert alert-danger';
-      document.getElementById('status' + type).innerText = message;
-      document.getElementById('status' + type).style.display = 'block';
-    }
-
-    function submitDaftar() {
-      var form = document.getElementById('formDaftar');
-      toggleUI('Daftar', true);
-
-      // Hantar data terus melalui fetch JSON ke Apps Script API
-      var payload = {
-        action: "daftar",
-        form: {
-          namaPU: form.namaPU.value,
-          nama: form.nama.value,
-          nokp: form.nokp.value,
-          telefon: form.telefon.value,
-          beg: form.beg.checked,
-          kursus: form.kursus.checked,
-          jadual: form.jadual.checked,
-          keyin: form.keyin.checked
-        }
-      };
-
-      fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(res => {
-        showStatus('Daftar', res.status, res.message);
-        if(res.status === 'success') form.reset();
-        toggleUI('Daftar', false);
-      })
-      .catch(err => {
-        showStatus('Daftar', 'error', 'Ralat sambungan: ' + err.toString());
-        toggleUI('Daftar', false);
-      });
-    }
-
-    function cariStatusJemaah() {
-      var nokp = document.getElementById('input_nokp_cari').value.trim();
-      var infoDiv = document.getElementById('infoJemaah');
-      if(!nokp) { alert("Sila masukkan No. K/P"); return; }
-      
-      infoDiv.innerHTML = "⏳ Mencari...";
-      fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "semak", nokp: nokp })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if(res.status === 'success') {
-          infoDiv.innerHTML = "✅ Dijumpai: " + res.nama;
-          document.getElementById('formKemaskini').style.display = "block";
-          document.getElementById('panelStatusDokumen').style.display = "block";
-        } else {
-          infoDiv.innerHTML = "❌ " + res.message;
-        }
-      });
     }
 
     function muatDataJemaah() {
-      document.getElementById('badanJadual').innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 30px;">⏳ Memuat data...</td></tr>`;
+      document.getElementById('badanJadual').innerHTML = `<tr><td style="padding: 30px; text-align:center; color:var(--secondary);">⏳ Memuat data dari pangkalan...</td></tr>`;
+      
+      // Menggunakan cara JSONP / GET ringkas untuk elak isu CORS pada senarai
       fetch(API_URL + "?action=getSenarai")
-      .then(res => res.json())
-      .then(res => {
-        if(res.status === 'success' && res.data.length > 0) {
-          let html = "";
-          res.data.forEach(j => {
-            html += `<tr><td><b>${j.nama}</b><br><small>PU: ${j.namaPU}</small></td><td colspan="3">Data Aktif</td></tr>`;
-          });
-          document.getElementById('badanJadual').innerHTML = html;
-        } else {
-          document.getElementById('badanJadual').innerHTML = `<tr><td colspan="4" style="text-align:center;">Tiada rekod.</td></tr>`;
-        }
-      });
+        .then(res => res.json())
+        .then(res => {
+          if(res.status === 'success' && res.data.length > 0) {
+            let html = "";
+            res.data.forEach(j => {
+              html += `<tr style="border-bottom:1px solid #E2E8F0;">
+                        <td style="padding:12px;">
+                          <b>${j.nama}</b> (No. KP: ${j.nokp})<br>
+                          <small style="color:var(--text-muted);">PU: ${j.namaPU} | Tel: ${j.telefon}</small>
+                        </td>
+                       </tr>`;
+            });
+            document.getElementById('badanJadual').innerHTML = html;
+          } else {
+            document.getElementById('badanJadual').innerHTML = `<tr><td style="padding:30px; text-align:center;">Tiada rekod jemaah dijumpai.</td></tr>`;
+          }
+        })
+        .catch(err => {
+          document.getElementById('badanJadual').innerHTML = `<tr><td style="padding:30px; text-align:center; color:red;">Gagal memuat data. Sila cuba lagi.</td></tr>`;
+        });
     }
   </script>
 </body>
