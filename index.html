@@ -22,7 +22,6 @@
     .container { background-color: var(--bg-card); width: 100%; padding: 35px 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(6, 95, 77, 0.08); border: 1px solid rgba(6, 95, 77, 0.05); }
 
     .header { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; }
-    .brand-logo { max-width: 200px; height: auto; margin-bottom: 15px; }
     .header h2 { font-family: 'Montserrat', sans-serif; font-size: 24px; color: var(--primary); font-weight: 800; text-align:center;}
     .header p { font-size: 13px; color: var(--text-muted); margin-top: 5px; text-align:center;}
 
@@ -42,7 +41,6 @@
     
     input[type="file"] { padding: 10px; font-size: 13px; border: 1.5px dashed var(--border-color); background: #F8FAFC; cursor: pointer; }
     input[type="file"]::file-selector-button { background-color: #E2E8F0; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-right: 15px; font-weight: 600; color: var(--primary); transition: 0.2s;}
-    input[type="file"]::file-selector-button:hover { background-color: #CBD5E1; }
     
     .checklist-container { background: #F8FAFC; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;}
     .checkbox-item { display: flex; align-items: center; gap: 10px; }
@@ -63,7 +61,6 @@
     .status-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--border-color); font-size: 13px; }
     .status-item:last-child { border-bottom: none; }
     .doc-ada { color: #047857; font-weight: 600; background: #D1FAE5; padding: 4px 10px; border-radius: 4px; font-size: 11px; text-decoration: none; display:inline-block; margin:3px; }
-    .doc-ada:hover { background: #10B981; color: white; }
     .doc-tiada { color: #B91C1C; font-weight: 600; background: #FEE2E2; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
     .doc-neutral { color: #475569; font-weight: 600; background: #F1F5F9; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
 
@@ -75,7 +72,6 @@
     
     .badge { padding: 5px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; display: inline-block; text-align: center; margin: 2px; }
     .badge-ada { background-color: #D1FAE5; color: #3F6212; border: 1px solid #BEF264; }
-    .badge-ada:hover { background-color: #BEF264; }
     .badge-tiada { background-color: #FEE2E2; color: #991B1B; border: 1px solid #fecaca; }
     .badge-neutral { background-color: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
     .badge-pu { background-color: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; font-weight: 700; }
@@ -99,9 +95,9 @@
     <div class="container">
       
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('daftar')">Daftar Jemaah Baru</button>
-        <button class="tab-btn" onclick="switchTab('kemaskini')">Kemaskini & Semak</button>
-        <button class="tab-btn" onclick="switchTab('senarai'); muatDataJemaah();">Senarai Status</button>
+        <button class="tab-btn active" onclick="switchTab('daftar', this)">Daftar Jemaah Baru</button>
+        <button class="tab-btn" onclick="switchTab('kemaskini', this)">Kemaskini & Semak</button>
+        <button class="tab-btn" onclick="switchTab('senarai', this); muatDataJemaah();">Senarai Status</button>
       </div>
 
       <!-- TAB 1: DAFTAR BAHARU -->
@@ -125,7 +121,7 @@
             <div class="form-group"><label>Borang Pendaftaran</label><input type="file" name="borang" class="form-control" required></div>
             
             <div style="background: #F0F7F4; padding: 12px 15px; border-radius: 8px; border-left: 4px solid var(--secondary); margin: 30px 0 15px;">
-              <p style="font-size: 12px; color: var(--primary); font-weight: 700; margin:0; text-transform:uppercase;">Checklist Operasi (Tandakan jika selesai)</p>
+              <p style="font-size: 12px; color: var(--primary); font-weight: 700; margin:0; text-transform:uppercase;">Checklist Operasi</p>
             </div>
             
             <div class="checklist-container">
@@ -154,7 +150,6 @@
       <!-- TAB 2: KEMASKINI & PADAM -->
       <div id="tab-kemaskini" class="tab-content">
         <div class="form-wrapper">
-          
           <div class="form-group" style="background: #F8FAFC; padding: 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 25px;">
             <label style="font-size: 14px; color: var(--primary);">Masukkan No. K/P Jemaah</label>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -164,10 +159,8 @@
             <div id="infoJemaah" style="font-size: 13px; color: var(--secondary); font-weight: 600; margin-top: 10px;"></div>
           </div>
 
-          <!-- KOTAK STATUS SEMASA -->
           <div id="panelStatusDokumen" class="status-panel">
             <h4 style="font-size: 13px; color: var(--primary); font-family: 'Montserrat', sans-serif; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Status Dokumen Semasa:</h4>
-            
             <div class="status-item"><span>1. Borang Pendaftaran:</span> <span id="st_borang"></span></div>
             <div class="status-item"><span>2. Gambar Pasport:</span> <span id="st_gambar"></span></div>
             <div class="status-item"><span>3. Salinan Pasport:</span> <span id="st_salinan"></span></div>
@@ -178,58 +171,37 @@
 
           <form id="formKemaskini" onsubmit="event.preventDefault(); submitKemaskini();" style="display:none;">
             <input type="hidden" id="hidden_nokp" name="nokp_kemaskini">
-
             <p style="font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; margin-top:30px;">Kemaskini Checklist Operasi:</p>
-            
             <div class="checklist-container">
               <div class="checkbox-item"><input type="checkbox" id="cb_beg_k" name="beg_k"><label for="cb_beg_k">Serahan Beg</label></div>
               <div class="checkbox-item"><input type="checkbox" id="cb_kursus_k" name="kursus_k"><label for="cb_kursus_k">Kursus Umrah</label></div>
               <div class="checkbox-item"><input type="checkbox" id="cb_jadual_k" name="jadual_k"><label for="cb_jadual_k">Jadual Perjalanan</label></div>
               <div class="checkbox-item"><input type="checkbox" id="cb_keyin_k" name="keyin_k"><label for="cb_keyin_k">Key-In Passport</label></div>
             </div>
-
-            <p style="font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; margin-top:30px;">Tambah Dokumen / Resit Baru:</p>
-            
-            <div class="form-group"><label>Borang Pendaftaran Baru</label><input type="file" name="borang_k" class="form-control"></div>
-            <div class="form-group"><label>Gambar Pasport</label><input type="file" name="gambarPasport_k" class="form-control"></div>
-            <div class="form-group"><label>Salinan Pasport</label><input type="file" name="salinanPasport_k" class="form-control"></div>
-            <div class="form-group"><label>Biometrik Baru</label><input type="file" name="bio_k" class="form-control"></div>
-            <div class="form-group"><label>Tiket HHR Baru (Pilihan)</label><input type="file" name="tiketHHR_k" class="form-control"></div>
-            <div class="form-group"><label>Tambah Resit Bayaran</label><input type="file" name="buktiPembayaran_k" class="form-control"><small style="color:var(--text-muted)">*Resit baru akan ditambah tanpa memadam resit terdahulu.</small></div>
-            
             <button type="submit" id="btnKemaskini" class="btn-submit btn-dark"><div class="loader" id="loaderKemaskini"></div> <span id="txtKemaskini">Simpan Rekod & Dokumen</span></button>
             <div id="statusKemaskini" class="alert"></div>
           </form>
-
-          <div id="panelPadam" style="display: none; margin-top: 40px; border-top: 2px dashed #FEE2E2; padding-top: 20px;">
-            <p style="font-size: 12px; color: var(--danger); font-weight: 600; margin-bottom: 10px;">Zon Bahaya: Ingin memadam keseluruhan rekod jemaah ini?</p>
-            <button type="button" class="btn-submit btn-danger" onclick="prosesPadamJemaah()">🗑️ Padam Rekod Jemaah Ini</button>
-          </div>
-
         </div>
       </div>
 
       <!-- TAB 3: SENARAI JEMAAH & STATUS -->
       <div id="tab-senarai" class="tab-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;">
-          <h3 style="font-size: 16px; color: var(--primary); font-weight: 700; font-family: 'Montserrat', sans-serif; text-transform: uppercase;">Pangkalan Data Lengkap</h3>
-          <button onclick="muatDataJemaah()" style="background:var(--bg-card); border:1.5px solid var(--border-color); color:var(--text-main); padding: 8px 16px; border-radius: 6px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px;">
-            <div class="loader" id="loaderSenarai" style="border-top-color:var(--text-main); width:14px; height:14px;"></div> 🔄 Segar Semula
-          </button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+          <h3 style="font-size: 16px; color: var(--primary); font-weight: 700;">Pangkalan Data Lengkap</h3>
+          <button onclick="muatDataJemaah()" style="background:var(--bg-card); border:1.5px solid var(--border-color); padding: 8px 16px; border-radius: 6px; font-size:12px; font-weight:700; cursor:pointer;">🔄 Segar Semula</button>
         </div>
-
         <div class="table-responsive">
-          <table id="jadualJemaah">
+          <table>
             <thead>
               <tr>
-                <th>Nama Jemaah</th>
+                <th>Nama PU & Jemaah</th>
                 <th>Semakan Dokumen</th>
                 <th>Resit Bayaran</th>
-                <th style="min-width: 200px;">Checklist Operasi</th>
+                <th>Checklist Operasi</th>
               </tr>
             </thead>
             <tbody id="badanJadual">
-              <tr><td colspan="4" style="text-align:center; padding: 50px; color: var(--text-muted);">Sila klik butang <b>'Segar Semula'</b> untuk memaparkan data terkini.</td></tr>
+              <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-muted);">Sila klik butang <b>'Segar Semula'</b> untuk paparan.</td></tr>
             </tbody>
           </table>
         </div>
@@ -239,189 +211,14 @@
   </div>
 
   <script>
-    const API_URL = https://script.google.com/macros/s/AKfycby9afV3y8OmGUte2ImXPLc9yfpfWqiKDdAwMmzwihwoVG3edOWYBVMIiYCvaCKK_xCF/exec;
-    function switchTab(tabName) {
+    // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI:
+    const API_URL = https://script.google.com/macros/s/AKfycby9afV3y8OmGUte2ImXPLc9yfpfWqiKDdAwMmzwihwoVG3edOWYBVMIiYCvaCKK_xCF/exec";
+
+    function switchTab(tabName, btnElement) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + tabName).classList.add('active');
-      if(event && event.currentTarget) event.currentTarget.classList.add('active');
-    }
-
-    // Fungsi hantar pendaftaran ke Apps Script
-  function submitDaftar() {
-    var form = document.getElementById('formDaftar');
-    var formData = new FormData(form);
-
-    function cariStatusJemaah() {
-      var nokp = document.getElementById('input_nokp_cari').value.trim();
-      var infoDiv = document.getElementById('infoJemaah');
-      var panel = document.getElementById('panelStatusDokumen');
-      var formK = document.getElementById('formKemaskini');
-      var panelPadam = document.getElementById('panelPadam');
-      var statusAlert = document.getElementById('statusKemaskini');
-
-      // Kosongkan mesej alert lama supaya ia tidak kekal terpapar
-      statusAlert.style.display = "none";
-      statusAlert.innerText = "";
-
-      if(nokp === "") { alert("Sila masukkan No. Kad Pengenalan terlebih dahulu."); return; }
-
-      infoDiv.innerHTML = "⏳ Sedang mencari rekod jemaah...";
-      panel.style.display = "none"; formK.style.display = "none"; panelPadam.style.display = "none";
-
-      google.script.run.withSuccessHandler(function(res) {
-        if(res.status === 'success') {
-          infoDiv.innerHTML = "✅ Jemaah dijumpai: " + res.nama + " (Nama PU: " + res.namaPU + ", Tel: " + res.telefon + ")";
-          document.getElementById('hidden_nokp').value = nokp; 
-
-          updateDocStatus('st_borang', res.borang);
-          updateDocStatus('st_gambar', res.gambar);
-          updateDocStatus('st_salinan', res.salinan);
-          updateDocStatus('st_bio', res.bio);
-          
-          var elHHR = document.getElementById('st_hhr');
-          if(res.tiketHHR !== "") elHHR.innerHTML = `<a href="${res.tiketHHR}" target="_blank" class="doc-ada">✔ Lihat Fail</a>`;
-          else elHHR.innerHTML = `<span class="doc-neutral">➖ Tiada (Pilihan)</span>`;
-
-          updateResitList('st_resit', res.resit);
-
-          // Update checklist UI form
-          document.getElementById('cb_beg_k').checked = (res.beg === "Selesai");
-          document.getElementById('cb_kursus_k').checked = (res.kursus === "Selesai");
-          document.getElementById('cb_jadual_k').checked = (res.jadual === "Selesai");
-          document.getElementById('cb_keyin_k').checked = (res.keyin === "Selesai");
-
-          panel.style.display = "block";
-          formK.style.display = "block";
-          panelPadam.style.display = "block";
-        } else {
-          infoDiv.innerHTML = "❌ " + res.message;
-        }
-      }).semakStatusJemaah(nokp);
-    }
-
-    function updateDocStatus(elementId, url) {
-      var el = document.getElementById(elementId);
-      if(url !== "" && url !== "Selesai") el.innerHTML = `<a href="${url}" target="_blank" class="doc-ada">✔ Lihat Fail</a>`;
-      else if(url === "Selesai") el.innerHTML = `<span class="doc-ada">✔ Rekod Lama</span>`;
-      else el.innerHTML = `<span class="doc-tiada">✖ Belum Ada</span>`;
-    }
-
-    function updateResitList(elementId, resitString) {
-      var el = document.getElementById(elementId);
-      if(!resitString || resitString === "") { el.innerHTML = `<span class="doc-tiada">✖ Tiada Resit Lagi</span>`; return; }
-      
-      var resitArray = resitString.split(" | ");
-      var htmlLinks = "";
-      resitArray.forEach(function(item) {
-        var parts = item.split(": ");
-        if(parts.length === 2) htmlLinks += `<a href="${parts[1]}" target="_blank" class="doc-ada">${parts[0]}</a><br>`;
-        else htmlLinks += `<a href="${item}" target="_blank" class="doc-ada">Resit</a><br>`;
-      });
-      el.innerHTML = htmlLinks !== "" ? htmlLinks : `<span class="doc-tiada">✖ Tiada Resit Lagi</span>`;
-    }
-
-    function submitDaftar() {
-      var form = document.getElementById('formDaftar');
-      toggleUI('Daftar', true);
-      google.script.run.withSuccessHandler(function(res) {
-        showStatus('Daftar', res.status, res.message);
-        if(res.status === 'success') form.reset();
-        toggleUI('Daftar', false);
-      }).daftarJemaah(form);
-    }
-
-    function submitKemaskini() {
-      var form = document.getElementById('formKemaskini');
-      toggleUI('Kemaskini', true);
-      google.script.run.withSuccessHandler(function(res) {
-        showStatus('Kemaskini', res.status, res.message);
-        if(res.status === 'success') {
-          form.reset();
-          cariStatusJemaah(); // refresh
-        }
-        toggleUI('Kemaskini', false);
-      }).kemaskiniDokumen(form);
-    }
-
-    function prosesPadamJemaah() {
-      var nokpVal = document.getElementById('hidden_nokp').value;
-      var namaJemaah = document.getElementById('infoJemaah').innerText;
-      if(!nokpVal) return;
-
-      if(!confirm("Adakah anda PASTI mahu memadam rekod jemaah ini?\n\n" + namaJemaah + "\n\nTindakan ini tidak boleh diundur!")) return;
-
-      document.getElementById('statusKemaskini').className = 'alert alert-info';
-      document.getElementById('statusKemaskini').style.display = 'block';
-      document.getElementById('statusKemaskini').innerText = "Sedang memadam rekod...";
-
-      google.script.run.withSuccessHandler(function(res) {
-        showStatus('Kemaskini', res.status, res.message);
-        if(res.status === 'success') {
-          document.getElementById('panelStatusDokumen').style.display = "none";
-          document.getElementById('formKemaskini').style.display = "none";
-          document.getElementById('panelPadam').style.display = "none";
-          document.getElementById('infoJemaah').innerHTML = "";
-          document.getElementById('input_nokp_cari').value = "";
-        }
-      }).padamJemaah(nokpVal);
-    }
-
-    function muatDataJemaah() {
-      document.getElementById('loaderSenarai').style.display = 'inline-block';
-      document.getElementById('badanJadual').innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 40px; color:var(--secondary); font-weight:600;">⏳ Sedang mengambil data dari pelayan...</td></tr>`;
-      
-      google.script.run.withSuccessHandler(function(res) {
-        document.getElementById('loaderSenarai').style.display = 'none';
-        if(res.status === 'success') {
-          let htmlJadual = "";
-          if(res.data.length === 0) {
-            htmlJadual = `<tr><td colspan="4" style="text-align:center; padding: 40px;">Tiada rekod jemaah dijumpai.</td></tr>`;
-          } else {
-            res.data.forEach(jemaah => {
-              let badgePU = `<span class="badge badge-pu">PU: ${jemaah.namaPU}</span>`;
-
-              let d_br = jemaah.borang ? `<a href="${jemaah.borang}" target="_blank" class="badge badge-ada">Borang</a>` : `<span class="badge badge-tiada">Borang</span>`;
-              let d_gb = jemaah.gambar ? `<a href="${jemaah.gambar}" target="_blank" class="badge badge-ada">Gambar</a>` : `<span class="badge badge-tiada">Gambar</span>`;
-              let d_ps = jemaah.salinan ? `<a href="${jemaah.salinan}" target="_blank" class="badge badge-ada">Pasport</a>` : `<span class="badge badge-tiada">Pasport</span>`;
-              let d_bio = (jemaah.bio && jemaah.bio !== "Selesai") ? `<a href="${jemaah.bio}" target="_blank" class="badge badge-ada">Biometrik</a>` : (jemaah.bio === "Selesai" ? `<span class="badge badge-ada">Biometrik (Lama)</span>` : `<span class="badge badge-tiada">Biometrik</span>`);
-              let d_hr = jemaah.tiketHHR ? `<a href="${jemaah.tiketHHR}" target="_blank" class="badge badge-ada">Tiket HHR</a>` : `<span class="badge badge-neutral">Tiada HHR</span>`;
-              
-              let d_resit = `<span class="badge badge-tiada">Tiada Resit</span>`;
-              if(jemaah.resit && jemaah.resit !== "") {
-                var rArr = jemaah.resit.split(" | ");
-                d_resit = "";
-                rArr.forEach(function(r) {
-                  var p = r.split(": ");
-                  if(p.length === 2) d_resit += `<a href="${p[1]}" target="_blank" class="badge badge-ada">${p[0]}</a> `;
-                  else d_resit += `<a href="${r}" target="_blank" class="badge badge-ada">Resit</a> `;
-                });
-              }
-
-              let c_beg = `<span class="badge ${jemaah.beg === 'Selesai' ? 'badge-ada' : 'badge-tiada'}">Beg ${jemaah.beg === 'Selesai' ? '✔' : '✖'}</span>`;
-              let c_kur = `<span class="badge ${jemaah.kursus === 'Selesai' ? 'badge-ada' : 'badge-tiada'}">Kursus ${jemaah.kursus === 'Selesai' ? '✔' : '✖'}</span>`;
-              let c_jad = `<span class="badge ${jemaah.jadual === 'Selesai' ? 'badge-ada' : 'badge-tiada'}">Jadual ${jemaah.jadual === 'Selesai' ? '✔' : '✖'}</span>`;
-              let c_key = `<span class="badge ${jemaah.keyin === 'Selesai' ? 'badge-ada' : 'badge-tiada'}">Key-In ${jemaah.keyin === 'Selesai' ? '✔' : '✖'}</span>`;
-
-              htmlJadual += `
-                <tr>
-                  <td>
-                      <div style="margin-bottom: 6px;">${badgePU}</div>
-                      <div style="font-weight: 700; color: var(--primary); margin-bottom: 2px;">${jemaah.nama}</div>
-                      <div style="font-size:12px; color:var(--text-main); font-weight:500;">KP: ${jemaah.nokp}</div>
-                      <div style="font-size:12px; color:var(--text-muted);">Tel: ${jemaah.telefon}</div>
-                  </td>
-                  <td><div style="display:flex; flex-wrap:wrap; gap:4px; max-width: 200px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hr}</div></td>
-                  <td><div style="display:flex; flex-wrap:wrap; gap:4px; max-width: 200px;">${d_resit}</div></td>
-                  <td><div style="display:flex; flex-wrap:wrap; gap:4px;">${c_beg} ${c_kur} ${c_jad} ${c_key}</div></td>
-                </tr>`;
-            });
-          }
-          document.getElementById('badanJadual').innerHTML = htmlJadual;
-        } else {
-          document.getElementById('badanJadual').innerHTML = `<tr><td colspan="4" style="text-align:center; color:red; padding: 40px;">Ralat: ${res.message}</td></tr>`;
-        }
-      }).getSenaraiJemaah();
+      if (btnElement) btnElement.classList.add('active');
     }
 
     function toggleUI(type, isLoading) {
@@ -430,7 +227,7 @@
       if(isLoading) { 
         document.getElementById('status' + type).className = 'alert alert-info'; 
         document.getElementById('status' + type).style.display = 'block';
-        document.getElementById('status' + type).innerText = "Menyimpan data ke pangkalan... Sila tunggu sebentar."; 
+        document.getElementById('status' + type).innerText = "Sedang berhubung dengan pelayan... Sila tunggu."; 
       }
     }
     
@@ -438,6 +235,80 @@
       document.getElementById('status' + type).className = status === 'success' ? 'alert alert-success' : 'alert alert-danger';
       document.getElementById('status' + type).innerText = message;
       document.getElementById('status' + type).style.display = 'block';
+    }
+
+    function submitDaftar() {
+      var form = document.getElementById('formDaftar');
+      toggleUI('Daftar', true);
+
+      // Hantar data terus melalui fetch JSON ke Apps Script API
+      var payload = {
+        action: "daftar",
+        form: {
+          namaPU: form.namaPU.value,
+          nama: form.nama.value,
+          nokp: form.nokp.value,
+          telefon: form.telefon.value,
+          beg: form.beg.checked,
+          kursus: form.kursus.checked,
+          jadual: form.jadual.checked,
+          keyin: form.keyin.checked
+        }
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        showStatus('Daftar', res.status, res.message);
+        if(res.status === 'success') form.reset();
+        toggleUI('Daftar', false);
+      })
+      .catch(err => {
+        showStatus('Daftar', 'error', 'Ralat sambungan: ' + err.toString());
+        toggleUI('Daftar', false);
+      });
+    }
+
+    function cariStatusJemaah() {
+      var nokp = document.getElementById('input_nokp_cari').value.trim();
+      var infoDiv = document.getElementById('infoJemaah');
+      if(!nokp) { alert("Sila masukkan No. K/P"); return; }
+      
+      infoDiv.innerHTML = "⏳ Mencari...";
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "semak", nokp: nokp })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === 'success') {
+          infoDiv.innerHTML = "✅ Dijumpai: " + res.nama;
+          document.getElementById('formKemaskini').style.display = "block";
+          document.getElementById('panelStatusDokumen').style.display = "block";
+        } else {
+          infoDiv.innerHTML = "❌ " + res.message;
+        }
+      });
+    }
+
+    function muatDataJemaah() {
+      document.getElementById('badanJadual').innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 30px;">⏳ Memuat data...</td></tr>`;
+      fetch(API_URL + "?action=getSenarai")
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === 'success' && res.data.length > 0) {
+          let html = "";
+          res.data.forEach(j => {
+            html += `<tr><td><b>${j.nama}</b><br><small>PU: ${j.namaPU}</small></td><td colspan="3">Data Aktif</td></tr>`;
+          });
+          document.getElementById('badanJadual').innerHTML = html;
+        } else {
+          document.getElementById('badanJadual').innerHTML = `<tr><td colspan="4" style="text-align:center;">Tiada rekod.</td></tr>`;
+        }
+      });
     }
   </script>
 </body>
